@@ -1,0 +1,25 @@
+---
+- name: configure pi
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: install packages
+      ansible.builtin.apt:
+        name: "{{ packages }}"
+        state: present
+      vars:
+        packages:
+          - nmap
+          - aircrack-ng
+          - vim
+          - bat
+          - git
+
+    - name: stat batcat
+      stat: path=/usr/bin/batcat
+      register: batcat_stat
+
+    - name: move batcat to bat
+      command: mv /usr/bin/batcat /usr/bin/bat
+      when: batcat_stat.stat.exists
