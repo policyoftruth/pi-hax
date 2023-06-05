@@ -23,3 +23,11 @@
     - name: move batcat to bat
       command: mv /usr/bin/batcat /usr/bin/bat
       when: batcat_stat.stat.exists
+
+    - name: stat airodump
+      stat: path=/usr/sbin/airodump-ng-oui-update
+      register: airodump_stat
+
+    - name: oui update
+      command: airodump-ng-oui-update
+      when: airodump_stat.stat.exists
