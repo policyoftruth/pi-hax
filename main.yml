@@ -11,23 +11,27 @@
       vars:
         packages:
           - nmap
-          - aircrack-ng
           - vim
           - bat
           - git
 
-    - name: stat batcat
-      stat: path=/usr/bin/batcat
-      register: batcat_stat
+    - name: remove banner
+      ansible.builtin.file:
+        path: /etc/ssh/sshd_config.d/rename_user.conf
+        state: absent
+      register: banner_file
+
+    - name: restart sshd
+      service:
+        name: sshd
+        state: restarted
+      when: banner_file.changed
+
+    - name: stat bat
+      ansible.builtin.stat:
+        path: /usr/bin/bat
+      register: bat_stat
 
     - name: move batcat to bat
       command: mv /usr/bin/batcat /usr/bin/bat
-      when: batcat_stat.stat.exists
-
-    - name: stat airodump
-      stat: path=/usr/sbin/airodump-ng-oui-update
-      register: airodump_stat
-
-    - name: oui update
-      command: airodump-ng-oui-update
-      when: airodump_stat.stat.exists
+      when: bat_stat.stat.exists == False
