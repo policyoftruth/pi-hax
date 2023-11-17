@@ -14,6 +14,7 @@
           - vim
           - bat
           - git
+          - aircrack-ng
 
     - name: remove banner
       ansible.builtin.file:
@@ -36,25 +37,4 @@
       command: mv /usr/bin/batcat /usr/bin/bat
       when: bat_stat.stat.exists == False
 
-    - name: perform a full-upgrade
-      ansible.builtin.apt:
-        upgrade: full
-        update_cache: yes
 
-    - name: check if a reboot is required
-      ansible.builtin.stat:
-        path: /var/run/reboot-required
-        get_md5: no
-      register: reboot_required_file
-
-    - name: reboot the server if required
-      ansible.builtin.reboot:
-      when: reboot_required_file.stat.exists == true
-
-    - name: remove dependencies that are no longer required
-      ansible.builtin.apt:
-        autoremove: yes
-
-    - name: clean up the apt cache
-      ansible.builtin.apt:
-        autoclean: yes
