@@ -16,6 +16,26 @@
           - git
           - aircrack-ng
 
+    - name: stop avahi
+      ansible.builtin.systemd:
+        name: avahi-daemon
+        state: stopped
+
+    - name: disable avahi
+      ansible.builtin.systemd:
+        name: avahi-daemon
+        enabled: false
+
+    - name: stop bluetooth
+      ansible.builtin.systemd:
+        name: bluetooth
+        state: stopped
+
+    - name: disable bluetooth
+      ansible.builtin.systemd:
+        name: bluetooth
+        enabled: false
+
     - name: remove banner
       ansible.builtin.file:
         path: /etc/ssh/sshd_config.d/rename_user.conf

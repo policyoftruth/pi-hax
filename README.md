@@ -7,6 +7,7 @@ This repository is a collection of notes for configuring a headless Pi w/Ansible
 * The `ansible.cfg` file contains your username, inventory location, and private key name/location
 * The [screenshot](pi-imager-settings.png) shows the advanced settings for the Pi image utility
 * I am using the "Raspberry Pi OS Lite (32-bit)" version of Raspbian
+* In order to keep wpa_supplicant from binding to our monitor inferface, we need to rename the `/etc/wpa_supplicant/wpa_supplicant.conf` to a specific format: `/etc/wpa_supplicant/wpa_supplicant-wlan0.conf` where `wlan1` is our monitor interface.
  
 # Useful Commands
 * `sudo apt install python3-pip`
@@ -20,9 +21,10 @@ This repository is a collection of notes for configuring a headless Pi w/Ansible
 * `iwconfig wlan1 mode monitor`     # switch mode to monitor
 * `iwconfig wlan1 mode managed`     # switch back to managed
 * `ip link set dev wlan1 up`        # up the adapter
+* `nmcli dev set wlan1 managed no`  # disable network manager for monitor interface
+* `nmcli dev wifi list`             # list available networks
+* `sudo nmcli --ask dev wifi connect <example_ssid>` # connect to a network
 
 # References
-* <https://github.com/seemoo-lab/nexmon>
-* <https://re4son-kernel.com/>
-* <https://www.kali.org/docs/arm/using-rpi-imager-to-write-raspberry-pi-images/>
-* <https://assume-breach.medium.com/building-the-ultimate-portable-hacking-suite-with-a-raspberry-pi-zero-w-dbc60704d872>
+* <https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_networking/configuring-networkmanager-to-ignore-certain-devices_configuring-and-managing-networking>
+* <https://www.raspberrypi.com/documentation/computers/configuration.html#using-the-command-line>
