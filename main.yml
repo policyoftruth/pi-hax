@@ -14,7 +14,7 @@
           - vim
           - bat
           - git
-          - aircrack-ng
+          - lsof
 
     - name: stop avahi
       ansible.builtin.systemd:
@@ -56,5 +56,3 @@
     - name: move batcat to bat
       command: mv /usr/bin/batcat /usr/bin/bat
       when: bat_stat.stat.exists == False
-
-
