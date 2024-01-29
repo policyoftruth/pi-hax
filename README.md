@@ -7,7 +7,6 @@ This repository is a collection of notes for configuring a headless Pi w/Ansible
 * The `ansible.cfg` file contains your username, inventory location, and private key name/location
 * The [screenshot](pi-imager-settings.png) shows the advanced settings for the Pi image utility
 * I am using the "Raspberry Pi OS Lite (32-bit)" version of Raspbian
-* In order to keep wpa_supplicant from binding to our monitor inferface, we need to rename the `/etc/wpa_supplicant/wpa_supplicant.conf` to a specific format: `/etc/wpa_supplicant/wpa_supplicant-wlan0.conf` where `wlan1` is our monitor interface.
  
 # Useful Commands
 * `sudo apt install python3-pip`
@@ -24,7 +23,15 @@ This repository is a collection of notes for configuring a headless Pi w/Ansible
 * `nmcli dev set wlan1 managed no`                      # disable network manager for monitor interface
 * `nmcli dev wifi list`                                 # list available networks
 * `sudo nmcli --ask dev wifi connect <example_ssid>`    # connect to a network
-* `aireplay-ng -9 wlan1`                                # test injection
 
 # References
 * <https://www.makeuseof.com/how-to-boot-raspberry-pi-ssd-permanent-storage/>
+
+# k8s
+* <https://docs.k3s.io/installation/requirements?os=pi>
+
+1. Append `cgroup_memory=1 cgroup_enable=memory` to /boot/cmdline.txt
+1. `getconf PAGESIZE` - must be 4k/4096
+1. `https://docs.k3s.io/quick-start`
+1. `curl -sfL https://get.k3s.io | sh -`
+1. `systemctl status k3s.service`
