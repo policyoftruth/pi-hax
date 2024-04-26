@@ -1,5 +1,3 @@
-
-
 ## Notes
 * `cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq`
 * `vcgencmd commands` - This will give a list of queries
