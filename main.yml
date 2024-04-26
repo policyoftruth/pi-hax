@@ -17,16 +17,7 @@
           - lsof
           - python3-pip
           - neofetch
-
-    - name: stop avahi
-      ansible.builtin.systemd:
-        name: avahi-daemon
-        state: stopped
-
-    - name: disable avahi
-      ansible.builtin.systemd:
-        name: avahi-daemon
-        enabled: false
+          - avahi-utils
 
     - name: stop bluetooth
       ansible.builtin.systemd:
@@ -36,6 +27,16 @@
     - name: disable bluetooth
       ansible.builtin.systemd:
         name: bluetooth
+        enabled: false
+
+    - name: stop modem crap
+      ansible.builtin.systemd:
+        name: ModemManager
+        state: stopped
+
+    - name: disable modem crap
+      ansible.builtin.systemd:
+        name: ModemManager
         enabled: false
 
     - name: remove banner
