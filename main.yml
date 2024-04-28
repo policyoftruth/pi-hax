@@ -39,6 +39,36 @@
         name: ModemManager
         enabled: false
 
+    - name: stop wpa crap
+      ansible.builtin.systemd:
+        name: wpa_supplicant
+        state: stopped
+
+    - name: disable wpa crap
+      ansible.builtin.systemd:
+        name: wpa_supplicant
+        enabled: false
+
+    - name: check wifi radio status
+      ansible.builtin.shell:
+        cmd: nmcli radio wifi
+      register: wifi_status
+
+    - name: disable wifi radio if needed
+      ansible.builtin.shell:
+        cmd: nmcli radio wifi off
+      when: wifi_status.stdout|lower == "enabled"
+
+    - name: check wwan radio status
+      ansible.builtin.shell:
+        cmd: nmcli radio wwan
+      register: wwan_status
+
+    - name: disable wwan radio if needed
+      ansible.builtin.shell:
+        cmd: nmcli radio wwan off
+      when: wwan_status.stdout|lower == "enabled"
+
     - name: remove banner
       ansible.builtin.file:
         path: /etc/ssh/sshd_config.d/rename_user.conf

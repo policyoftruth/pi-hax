@@ -19,8 +19,8 @@ This repository is a collection of notes for configuring a headless Pi w/Ansible
 I am hard wiring mine to ethernet and I don't like errant processes.
 
 * Update your /boot/firmware/config.txt with `dtoverlay=disable-wifi`, more notes in ./overclock
-* `nmcli radio wifi off`
-* `nmcli radio wwan off`
+* `sudo nmcli radio wifi off`
+* `sudo nmcli radio wwan off`
 * `systemctl disable wpa_supplicant.service`
 
 ## References
@@ -39,3 +39,7 @@ I am hard wiring mine to ethernet and I don't like errant processes.
 * `/usr/local/bin/k3s-killall.sh` - stop k3s
 * `k3s server` - start server
 * `k3s agent` - start agent
+
+
+## todo
+* figure out how to disable serial stuff outside of UI/raspi-config
