@@ -24,3 +24,6 @@ gpu_mem=320
 
 ## Observations
 * With `arm_boost=0`, seems to start at 600/700 and jump to 1500 using `temp.sh`
+
+## References
+* <https://www.raspberrypi.com/documentation/computers/config_txt.html>
