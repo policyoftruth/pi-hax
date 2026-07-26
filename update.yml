@@ -1,4 +1,3 @@
----
 - name: configure pi
   hosts: all
   become: yes
@@ -18,10 +17,15 @@
       ansible.builtin.reboot:
       when: reboot_required_file.stat.exists
 
-    - name: remove dependencies that are no longer required
+    - name: Wait for the host to come back online
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 20
+        sleep: 5
+        delay: 5
+        timeout: 300
+      when: reboot_required_file.stat.exists
+
+    - name: remove dependencies and clean apt cache
       ansible.builtin.apt:
         autoremove: yes
-
-    - name: clean up the apt cache
-      ansible.builtin.apt:
         autoclean: yes

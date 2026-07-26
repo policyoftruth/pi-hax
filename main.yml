@@ -1,4 +1,3 @@
----
 - name: configure pi
   hosts: all
   become: yes
@@ -19,73 +18,67 @@
           - neofetch
           - avahi-utils
 
-    - name: stop bluetooth
+    - name: stop and disable bluetooth service
       ansible.builtin.systemd:
         name: bluetooth
         state: stopped
-
-    - name: disable bluetooth
-      ansible.builtin.systemd:
-        name: bluetooth
         enabled: false
 
-    - name: stop modem crap
+    - name: stop and disable ModemManager service
       ansible.builtin.systemd:
         name: ModemManager
         state: stopped
-
-    - name: disable modem crap
-      ansible.builtin.systemd:
-        name: ModemManager
         enabled: false
 
-    - name: stop wpa crap
+    - name: stop and disable wpa_supplicant service
       ansible.builtin.systemd:
         name: wpa_supplicant
         state: stopped
-
-    - name: disable wpa crap
-      ansible.builtin.systemd:
-        name: wpa_supplicant
         enabled: false
 
     - name: check wifi radio status
       ansible.builtin.shell:
         cmd: nmcli radio wifi
       register: wifi_status
+      changed_when: false
 
     - name: disable wifi radio if needed
-      ansible.builtin.shell:
+      ansible.builtin.command:
         cmd: nmcli radio wifi off
-      when: wifi_status.stdout|lower == "enabled"
+      when: wifi_status.stdout | lower == "enabled"
 
     - name: check wwan radio status
       ansible.builtin.shell:
         cmd: nmcli radio wwan
       register: wwan_status
+      changed_when: false
 
     - name: disable wwan radio if needed
-      ansible.builtin.shell:
+      ansible.builtin.command:
         cmd: nmcli radio wwan off
-      when: wwan_status.stdout|lower == "enabled"
+      when: wwan_status.stdout | lower == "enabled"
 
-    - name: remove banner
+    - name: remove ssh banner file
       ansible.builtin.file:
         path: /etc/ssh/sshd_config.d/rename_user.conf
         state: absent
-      register: banner_file
+      notify: restart sshd
 
+    - name: check for batcat binary
+      ansible.builtin.stat:
+        path: /usr/bin/batcat
+      register: batcat_binary
+
+    - name: create symbolic link for bat
+      ansible.builtin.file:
+        src: /usr/bin/batcat
+        dest: /usr/bin/bat
+        state: link
+        force: yes
+      when: batcat_binary.stat.exists
+
+  handlers:
     - name: restart sshd
-      service:
+      ansible.builtin.service:
         name: sshd
         state: restarted
-      when: banner_file.changed
-
-    - name: stat bat
-      ansible.builtin.stat:
-        path: /usr/bin/bat
-      register: bat_stat
-
-    - name: move batcat to bat
-      command: mv /usr/bin/batcat /usr/bin/bat
-      when: bat_stat.stat.exists == False
